@@ -21,6 +21,10 @@ public class MessageManager{
 		msg(sender, ChatColor.YELLOW + "[BasicTeleport] " + ChatColor.GREEN, msg);
 	}
 	
+	public void info(CommandSender sender, String msg){
+		msg(sender, ChatColor.YELLOW + "[BasicTeleport] " + ChatColor.WHITE, msg);
+	}
+	
 	private void msg(CommandSender sender, String string, String msg){
 		sender.sendMessage(string + msg);
 	}

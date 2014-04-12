@@ -26,6 +26,10 @@ public class Teleport extends JavaPlugin{
 		Player p = (Player) sender;
 		
 		if (cmd.getName().equalsIgnoreCase("tp")){
+			if (!sender.hasPermission("basic.tp")){
+				MessageManager.getInstance().severe(sender, " You are not permitted to use this command.");
+				return true;
+			}
 			if (args.length == 0){
 				MessageManager.getInstance().severe(sender, " Please specify a player.");
 				return true;
@@ -41,6 +45,10 @@ public class Teleport extends JavaPlugin{
 		}
 		
 		if (cmd.getName().equalsIgnoreCase("tphere")){
+			if (!sender.hasPermission("basic.tphere")){
+				MessageManager.getInstance().severe(sender, " You are not permitted to use this command.");
+				return true;
+			}
 			if (args.length == 0){
 				MessageManager.getInstance().severe(sender, " Please specify a player.");
 				return true;
@@ -48,6 +56,7 @@ public class Teleport extends JavaPlugin{
 			Player target = (Player) this.getServer().getPlayer(args[0]);
 			if (target == null){
 				MessageManager.getInstance().severe(sender, " Could not find player " + args[0] + ".");
+				return true;
 			}
 			target.teleport(p);
 			MessageManager.getInstance().success(sender, "Teleporting player now!");
@@ -55,8 +64,40 @@ public class Teleport extends JavaPlugin{
 			return true;
 		}
 		
+		if (cmd.getName().equalsIgnoreCase("tpxyz")){
+			if (!sender.hasPermission("basic.tpxyz")){
+				MessageManager.getInstance().severe(sender, " You are not permitted to use this command.");
+				return true;
+			}
+			if(args.length == 0){
+				MessageManager.getInstance().severe(sender, " Please enter a [x] [y] [z].");
+				return true;
+			}
+			Location loc = new Location(p.getWorld(), Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+			p.teleport(loc);
+			MessageManager.getInstance().success(sender, "You have sucessfully teleported to " + args[0] + ", " + args[1] + ", " + args[2]);
+			return true;
+		}
+		/*
+		if (cmd.getName().equalsIgnoreCase("tpa")){
+			if (args.length == 0){
+				MessageManager.getInstance().severe(sender, " Please specify a player.");
+				return true;
+			}
+			Player target = Bukkit.getServer().getPlayer(args[0]);
+			if (target == null){
+				MessageManager.getInstance().severe(sender, " Could not find player " + args[0] + ".");
+				return true;
+			}
+			MessageManager.getInstance().info(target, args[0] + " wants to teleport to you if you accept type /tpaccept if not /tpdeny");
+			MessageManager.getInstance().success(sender, "Request sent to " + args[0] + " awaiting permission to teleport.");
+				p.teleport(target.getLocation());
+				return true;
+			}
+		}
+		*/
 		if(cmd.getName().equalsIgnoreCase("setspawn")){
-			if (!sender.hasPermission("spawn.set")){
+			if (!sender.hasPermission("basic.spawn.set")){
 				MessageManager.getInstance().severe(sender, " You are not permitted to use this command.");
 				return true;
 			}
@@ -81,6 +122,9 @@ public class Teleport extends JavaPlugin{
 			double y = getConfig().getDouble("spawn.y");
 			double z = getConfig().getDouble("spawn.z");
 			p.teleport(new Location(w, x, y, z));
+		}
+		
+		if (cmd.getName().equalsIgnoreCase("tpaccept")){
 		}
 		return true;
 	}

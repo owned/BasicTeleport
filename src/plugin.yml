@@ -1,5 +1,5 @@
 name: BasicTeleport
-version: 1.1
+version: 1.3
 main: com.hotmail.ownedwtf.BasicTeleport.Teleport
 description: Very basic spawn and teleport as of right now.
 
@@ -11,6 +11,12 @@ commands:
     tphere:
        usage: </command>
        description: teleport other players to you.
+    tpxyz:
+       usage: </command> [x] [y] [z]
+       description: teleport to a defined x,y,z coord.
+    tpa:
+       usage: </command>
+       description: teleport other players to you.
     setspawn:
        usage: </command>
        description: set the spawn on the server.
@@ -19,6 +25,15 @@ commands:
        description: teleport to the spawn.
        
 permissions:
-    spawn.set:
+    basic.spawn.set:
        description: use the set spawn to change the spawn.
        default: op
+    basic.tp:
+       description: able to use the /tp command
+       defualt: op
+    basic.tphere:
+       description: able to use the /tphere command
+       defualt: op
+    basic.tpxyz:
+       description: able to use the /tpxyz command
+       defualt: op
