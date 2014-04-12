@@ -1,5 +1,5 @@
 name: BasicTeleport
-version: 1.3
+version: 1.4
 main: com.hotmail.ownedwtf.BasicTeleport.Teleport
 description: Very basic spawn and teleport as of right now.
 
@@ -23,6 +23,12 @@ commands:
     spawn:
        usage: </command>
        description: teleport to the spawn.
+    setwarp:
+       usage: </command>
+       description: set a warp location.
+    warp:
+       usage: </command>
+       description: warp to a defined location.
        
 permissions:
     basic.spawn.set:

@@ -9,9 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Teleport extends JavaPlugin{
+	
+	SettingsManager settings = SettingsManager.getInstance();
 
 	public void onEnable(){
-		Bukkit.getServer().getLogger().info("BasicTeleport v " + this.getDescription().getVersion()  + " enabled!");
+		settings.setup(this);
 	}
 	
 	public void onDisable(){
@@ -101,31 +103,62 @@ public class Teleport extends JavaPlugin{
 				MessageManager.getInstance().severe(sender, " You are not permitted to use this command.");
 				return true;
 			}
-			getConfig().set("spawn.world", p.getLocation().getWorld().getName());
-			getConfig().set("spawn.x", p.getLocation().getX());
-			getConfig().set("spawn.y", p.getLocation().getY());
-			getConfig().set("spawn.z", p.getLocation().getZ());
-			getConfig().set("spawn.pitch", p.getLocation().getPitch());
-			getConfig().set("spawn.yaw", p.getLocation().getYaw());
-			saveConfig();
+			settings.getData().set("spawn.world", p.getLocation().getWorld().getName());
+			settings.getData().set("spawn.x", p.getLocation().getX());
+			settings.getData().set("spawn.y", p.getLocation().getY());
+			settings.getData().set("spawn.z", p.getLocation().getZ());
+			settings.saveData();
 			MessageManager.getInstance().success(sender, " Spawn has been set!");
 			return true;
 		}
 		
-		if (cmd.getName().equalsIgnoreCase("spawn")){
-			if(getConfig().getConfigurationSection("spawn") == null){
-				MessageManager.getInstance().severe(sender, " The spawn has not been setup.");
+        if (cmd.getName().equalsIgnoreCase("spawn")) {
+            if (settings.getData().getConfigurationSection("spawn") == null) {
+                    MessageManager.getInstance().severe(sender, "The spawn has not yet been set!");
+                    return true;
+            }
+            World w = Bukkit.getServer().getWorld(settings.getData().getString("spawn.world"));
+            double x = settings.getData().getDouble("spawn.x");
+            double y = settings.getData().getDouble("spawn.y");
+            double z = settings.getData().getDouble("spawn.z");
+            p.teleport(new Location(w, x, y, z));
+        }
+		
+		if(cmd.getName().equalsIgnoreCase("setwarp")){
+			if(!sender.hasPermission("basic.setwarp")){
+				MessageManager.getInstance().severe(sender, " You are not permitted to use this command.");
 				return true;
 			}
-			World w = Bukkit.getServer().getWorld(getConfig().getString("spawn.world"));
-			double x = getConfig().getDouble("spawn.x");
-			double y = getConfig().getDouble("spawn.y");
-			double z = getConfig().getDouble("spawn.z");
-			p.teleport(new Location(w, x, y, z));
+			if (args.length == 0){
+				MessageManager.getInstance().severe(sender, " Please specify a name.");
+				return true;
+			}
+            settings.getData().set("warps." + args[0] + ".world", p.getLocation().getWorld().getName());
+            settings.getData().set("warps." + args[0] + ".x", p.getLocation().getX());
+            settings.getData().set("warps." + args[0] + ".y", p.getLocation().getY());
+            settings.getData().set("warps." + args[0] + ".z", p.getLocation().getZ());
+            settings.saveData();
+			MessageManager.getInstance().success(sender, " Your warp location " + args[0] + " has been created." );
+			return true;
 		}
 		
-		if (cmd.getName().equalsIgnoreCase("tpaccept")){
-		}
+		if (cmd.getName().equalsIgnoreCase("warp")){
+			if (args.length == 0){
+				MessageManager.getInstance().severe(sender, " Please specify a location to warp.");
+				return true;
+			}
+			if(settings.getData().getConfigurationSection("warps." + args[0]) == null){
+				MessageManager.getInstance().severe(sender, " Warp " + args[0] + " does not exist!");
+				return true;
+			}
+            World w = Bukkit.getServer().getWorld(settings.getData().getString("warps." + args[0] + ".world"));
+            double x = settings.getData().getDouble("warps." + args[0] + ".x");
+            double y = settings.getData().getDouble("warps." + args[0] + ".y");
+            double z = settings.getData().getDouble("warps." + args[0] + ".z");
+            p.teleport(new Location(w, x, y, z));
+			MessageManager.getInstance().success(sender, " Teleported to " + args[0] + ".");
+			return true;
+			}
 		return true;
 	}
 }
