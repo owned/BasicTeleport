@@ -1,5 +1,5 @@
 name: BasicTeleport
-version: 1.0
+version: 1.1
 main: com.hotmail.ownedwtf.BasicTeleport.Teleport
 description: Very basic spawn and teleport as of right now.
 
@@ -8,9 +8,17 @@ commands:
        usage: </command>
        aliases: [teleport]
        description: teleport to other players.
+    tphere:
+       usage: </command>
+       description: teleport other players to you.
     setspawn:
        usage: </command>
        description: set the spawn on the server.
     spawn:
        usage: </command>
        description: teleport to the spawn.
+       
+permissions:
+    spawn.set:
+       description: use the set spawn to change the spawn.
+       default: op

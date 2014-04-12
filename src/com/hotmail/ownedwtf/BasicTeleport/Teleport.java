@@ -36,10 +36,30 @@ public class Teleport extends JavaPlugin{
 				return true;
 			}
 			p.teleport(target.getLocation());
+			MessageManager.getInstance().success(sender, "Teleporting!");
+			return true;
+		}
+		
+		if (cmd.getName().equalsIgnoreCase("tphere")){
+			if (args.length == 0){
+				MessageManager.getInstance().severe(sender, " Please specify a player.");
+				return true;
+			}
+			Player target = (Player) this.getServer().getPlayer(args[0]);
+			if (target == null){
+				MessageManager.getInstance().severe(sender, " Could not find player " + args[0] + ".");
+			}
+			target.teleport(p);
+			MessageManager.getInstance().success(sender, "Teleporting player now!");
+			MessageManager.getInstance().success(target, "Teleporting.");
 			return true;
 		}
 		
 		if(cmd.getName().equalsIgnoreCase("setspawn")){
+			if (!sender.hasPermission("spawn.set")){
+				MessageManager.getInstance().severe(sender, " You are not permitted to use this command.");
+				return true;
+			}
 			getConfig().set("spawn.world", p.getLocation().getWorld().getName());
 			getConfig().set("spawn.x", p.getLocation().getX());
 			getConfig().set("spawn.y", p.getLocation().getY());
